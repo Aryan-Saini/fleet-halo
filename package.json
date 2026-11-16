@@ -1,6 +1,6 @@
 {
   "name": "fleet-halo",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "Halo: see and click a browser on a headless Linux box from your laptop, AnyDesk style, in one command. Xvfb + Chrome + RustDesk or voxl over Tailscale.",
   "license": "MIT",
   "author": "Aryan Saini",

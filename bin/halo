@@ -9,6 +9,7 @@
 #   halo down          close the viewer; the remote session and its logins keep running
 #   halo stop          also stop everything halo started on the worker
 #   halo where         the worker's short hostname and the display being shared
+#   halo --version     the installed version
 #
 # When worker-chrome (npm worker-chrome) runs on the worker, halo shows that Chrome: the
 # same screen and logged-in profile agents drive. SCREENSHARE_CHROME=own uses a separate Xvfb :99
@@ -240,7 +241,12 @@ status)
 down)   viewer_quit && echo "viewer closed" || echo "no viewer" ;;
 stop)   viewer_quit || true; remote stop ;;
 where)  remote where ;;
--h|--help|help) sed -n '2,24p' "$0" | sed 's/^# \{0,1\}//' ;;
+-h|--help|help) awk 'NR > 1 && !/^#/ { exit } NR > 1 { sub(/^# ?/, ""); print }' "$0" ;;
+-v|--version|version)
+  # package.json sits next to bin/, wherever npm or a checkout put it (the bin is often a symlink).
+  sed -n 's/^  "version": "\(.*\)",$/\1/p' "$(cd "$(dirname "$(readlink -f "$0")")/.." && pwd)/package.json"
+  ;;
+-*)     die "unknown option $1. Try: halo --help" ;;
 *)
   url=""; [ "${1:-up}" = up ] && url=${2:-} || url=$1
   if [ -n "$VIEWER_URL" ]; then
