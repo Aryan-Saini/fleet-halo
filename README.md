@@ -1,22 +1,25 @@
-# screenshare-tunnel
+# Halo
+
+Halo (Fleet Halo), published as `fleet-halo`, formerly `screenshare-tunnel`. The command is
+`halo`; `screenshare` still works as an alias.
 
 A worker has no screen. Some steps still need a human in front of a browser: a login, a 2FA
-prompt, a captcha, an OAuth consent page. `screenshare` puts the worker's browser in a window on
+prompt, a captcha, an OAuth consent page. `halo` puts the worker's browser in a window on
 the controller in one command. You click through it, close the window, and the agent carries on
 with a browser that is now logged in.
 
 ```bash
-screenshare                       # bring it all up, open the viewer
-screenshare https://site/login    # same, and open that URL on the worker
-screenshare shot                  # PNG of the remote screen, no human needed
+halo                       # bring it all up, open the viewer
+halo https://site/login    # same, and open that URL on the worker
+halo shot                  # PNG of the remote screen, no human needed
 ```
 
 **With [worker-chrome](https://github.com/Aryan-Saini/worker-chrome)** running on the worker,
-screenshare shows that Chrome: the same screen and logged-in profile your agents drive, so a
-login you finish in the viewer is the login they use. Without it, screenshare starts its own
+halo shows that Chrome: the same screen and logged-in profile your agents drive, so a
+login you finish in the viewer is the login they use. Without it, halo starts its own
 Xvfb `:99` and Chrome. `SCREENSHARE_CHROME=own` forces that even when worker-chrome is up.
 
-The agent side is the `screenshare-tunnel` skill: it takes a screenshot first, and only asks you
+The agent side is the `halo` skill: it takes a screenshot first, and only asks you
 to look when the page actually needs a human.
 
 ## How it works
@@ -49,10 +52,10 @@ script adopts an Xvfb or Chrome that is already running instead of starting a se
 On the controller (the machine you sit at):
 
 ```bash
-npm i -g screenshare-tunnel     # puts `screenshare` on PATH
+npm i -g fleet-halo     # puts `halo` (and the old `screenshare`) on PATH
 ```
 
-Update with `npm i -g screenshare-tunnel@latest`. Nothing gets installed on the worker; the script
+Update with `npm i -g fleet-halo@latest`. Nothing gets installed on the worker; the script
 drives it over ssh. The worker only needs these:
 
 | where | what |
@@ -66,7 +69,7 @@ Point it at the worker with `export SCREENSHARE_HOST=<ssh alias>` (default `work
 
 ### Optional: voxl and a custom viewer
 
-If [voxl](https://github.com/tembo/voxl) is on the worker's `PATH`, `screenshare` also streams
+If [voxl](https://github.com/tembo/voxl) is on the worker's `PATH`, `halo` also streams
 the display to the browser at 60 fps: voxl listens on loopback `6999` and `tailscale serve`
 publishes it tailnet-only at `https://<worker>.<tailnet>.ts.net:16999/?token=<password>`
 (browsers only decode it on HTTPS). The password is `VOXL_PASSWORD` in `~/.screenshare/voxl.env`
@@ -82,12 +85,12 @@ export SCREENSHARE_VIEWER_URL='myviewer://open?worker={worker}&display={display}
 
 ## Agent skill
 
-`skills/screenshare-tunnel/SKILL.md` teaches an agent when and how to use this: screenshot
+`skills/halo/SKILL.md` teaches an agent when and how to use this: screenshot
 first, only ask a human when the page needs one. It ships in the npm package. Link it into
 your harness:
 
 ```bash
-ln -s "$(npm root -g)/screenshare-tunnel/skills/screenshare-tunnel" ~/.claude/skills/
+ln -s "$(npm root -g)/fleet-halo/skills/halo" ~/.claude/skills/
 ```
 
 [agent-fleet](https://github.com/Aryan-Saini/agent-fleet) does this for you when the
@@ -96,7 +99,7 @@ ln -s "$(npm root -g)/screenshare-tunnel/skills/screenshare-tunnel" ~/.claude/sk
 ## Verify
 
 ```bash
-screenshare status
+halo status
 nc -z -w 3 <worker-tailnet-ip> 21118   # must connect
 nc -z -w 3 <worker-lan-ip> 21118       # must be refused
 ```
@@ -106,9 +109,9 @@ nc -z -w 3 <worker-lan-ip> 21118       # must be refused
 - **RustDesk overwrites its own config while running.** The script edits config only while the
   process is stopped. Do the same by hand.
 - **The firewall rule disappears on boot** because tailscale rebuilds its table. Running
-  `screenshare` re-adds it. Don't move it to a permanent table without checking chain order.
-- **Black viewer:** the server is capturing another display. `screenshare` restarts it onto `:99`.
-- **Password rejected:** delete `~/.screenshare/password` on the worker and run `screenshare`.
+  `halo` re-adds it. Don't move it to a permanent table without checking chain order.
+- **Black viewer:** the server is capturing another display. `halo` restarts it onto `:99`.
+- **Password rejected:** delete `~/.screenshare/password` on the worker and run `halo`.
   It generates a new one and restarts the server with it.
 - **Keeping an existing password:** a worker that already ran RustDesk can keep its password.
   Write it to `~/.screenshare/password` (mode 600) before the first run.

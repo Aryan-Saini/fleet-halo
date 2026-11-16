@@ -1,15 +1,16 @@
 #!/usr/bin/env bash
-# screenshare: see and drive a browser on a headless worker from the controller, AnyDesk style.
+# halo (Fleet Halo): see and drive a browser on a headless worker from the controller, AnyDesk
+# style. `screenshare` is the same command, kept for old scripts.
 #
-#   screenshare [url]          bring up whatever is missing on the worker, open the viewer
-#   screenshare goto <url>     open a tab in the remote Chrome (no viewer needed)
-#   screenshare shot [out]     PNG of the remote screen (default /tmp/screenshare.png)
-#   screenshare status         every link in the chain
-#   screenshare down           close the viewer; the remote session and its logins keep running
-#   screenshare stop           also stop everything screenshare started on the worker
-#   screenshare where          the worker's short hostname and the display being shared
+#   halo [url]         bring up whatever is missing on the worker, open the viewer
+#   halo goto <url>    open a tab in the remote Chrome (no viewer needed)
+#   halo shot [out]    PNG of the remote screen (default /tmp/halo.png)
+#   halo status        every link in the chain
+#   halo down          close the viewer; the remote session and its logins keep running
+#   halo stop          also stop everything halo started on the worker
+#   halo where         the worker's short hostname and the display being shared
 #
-# When worker-chrome (npm worker-chrome) runs on the worker, screenshare shows that Chrome: the
+# When worker-chrome (npm worker-chrome) runs on the worker, halo shows that Chrome: the
 # same screen and logged-in profile agents drive. SCREENSHARE_CHROME=own uses a separate Xvfb :99
 # and Chrome instead.
 #
@@ -28,7 +29,7 @@ HOST=${SCREENSHARE_HOST:-worker}
 VIEWER_URL=${SCREENSHARE_VIEWER_URL:-}
 CHROME_MODE=${SCREENSHARE_CHROME:-auto}
 PORT=21118
-die() { echo "screenshare: $*" >&2; exit 1; }
+die() { echo "halo: $*" >&2; exit 1; }
 
 # Runs on the worker. $1 = auto|own, $2 = action (up|goto|shot|stop|status|password), $3 = URL.
 remote() {
@@ -166,7 +167,7 @@ up)
   ;;
 where) echo "$(hostname -s) $DISP" ;;
 goto)
-  cdp_up || { echo "no Chrome on :$CDP. Run: screenshare <url>" >&2; exit 1; }
+  cdp_up || { echo "no Chrome on :$CDP. Run: halo <url>" >&2; exit 1; }
   curl -sf -X PUT "http://127.0.0.1:$CDP/json/new?$URL" >/dev/null
   ;;
 status)
@@ -184,7 +185,7 @@ stop)
   for u in screenshare-voxl screenshare-rustdesk screenshare-chrome screenshare-xvfb; do
     systemctl --user stop "$u" 2>/dev/null || true
   done
-  echo "stopped the units screenshare started. Anything it adopted is untouched"
+  echo "stopped the units halo started. Anything it adopted is untouched"
   ;;
 esac
 REMOTE
@@ -230,8 +231,8 @@ viewer_quit() {
 }
 
 case ${1:-up} in
-goto)   [ -n "${2:-}" ] || die "usage: screenshare goto <url>"; remote goto "$2"; echo "opened $2" ;;
-shot)   out=${2:-/tmp/screenshare.png}; remote shot >"$out"; echo "$out" ;;
+goto)   [ -n "${2:-}" ] || die "usage: halo goto <url>"; remote goto "$2"; echo "opened $2" ;;
+shot)   out=${2:-/tmp/halo.png}; remote shot >"$out"; echo "$out" ;;
 status)
   remote status
   pgrep -xi rustdesk >/dev/null && echo "viewer    open" || echo "viewer    closed"
