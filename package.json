@@ -1,11 +1,12 @@
 {
-  "name": "screenshare-tunnel",
-  "version": "0.3.1",
-  "description": "See and click a browser on a headless Linux box from your laptop, AnyDesk style, in one command. Xvfb + Chrome + RustDesk over Tailscale.",
+  "name": "fleet-halo",
+  "version": "0.4.0",
+  "description": "Halo: see and click a browser on a headless Linux box from your laptop, AnyDesk style, in one command. Xvfb + Chrome + RustDesk or voxl over Tailscale. Formerly screenshare-tunnel.",
   "license": "MIT",
   "author": "Aryan Saini",
   "bin": {
-    "screenshare": "bin/screenshare"
+    "halo": "bin/halo",
+    "screenshare": "bin/halo"
   },
   "files": [
     "bin",
@@ -18,6 +19,7 @@
     "linux"
   ],
   "keywords": [
+    "halo",
     "rustdesk",
     "xvfb",
     "headless",
