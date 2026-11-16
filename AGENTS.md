@@ -1,4 +1,4 @@
-# Halo (npm `fleet-halo`, formerly `screenshare-tunnel`)
+# Halo (npm `fleet-halo`)
 
 **This repo is public and published to npm as `fleet-halo`.** Everything under `bin/`
 and `skills/` is downloaded by anyone who runs `npm i -g fleet-halo`.
