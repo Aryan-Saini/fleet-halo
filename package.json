@@ -1,6 +1,6 @@
 {
   "name": "fleet-halo",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Halo: see and click a browser on a headless Linux box from your laptop, AnyDesk style, in one command. Xvfb + Chrome + RustDesk or voxl over Tailscale.",
   "license": "MIT",
   "author": "Aryan Saini",
@@ -30,7 +30,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Aryan-Saini/screenshare-tunnel.git"
+    "url": "git+https://github.com/Aryan-Saini/fleet-halo.git"
   },
-  "homepage": "https://github.com/Aryan-Saini/screenshare-tunnel"
+  "homepage": "https://github.com/Aryan-Saini/fleet-halo"
 }
