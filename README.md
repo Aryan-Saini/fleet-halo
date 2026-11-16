@@ -1,7 +1,7 @@
 # Halo
 
-Halo (Fleet Halo), published as `fleet-halo`, formerly `screenshare-tunnel`. The command is
-`halo`; `screenshare` still works as an alias.
+Halo (Fleet Halo), published as `fleet-halo`. The command is `halo`; `screenshare` still works
+as an alias.
 
 A worker has no screen. Some steps still need a human in front of a browser: a login, a 2FA
 prompt, a captcha, an OAuth consent page. `halo` puts the worker's browser in a window on
